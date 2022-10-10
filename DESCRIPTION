@@ -1,7 +1,7 @@
 Package: deforestable
 Type: Package
 Title: Classify RGB Images into Forest or Non-Forest
-Version: 3.0.0
+Version: 3.1.0
 Authors@R: c(
   person("Jesper", "Muren", , "jespermuren@gmail.com", "aut",
          comment = c(ORCID = "0000-0002-9208-5325")),
@@ -19,11 +19,14 @@ Description: Implements two out-of box classifiers presented in <doi:10.48550/ar
 License: GPL-3
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
-Imports: terra, jpeg, plyr, StableEstim
+Imports: terra, jpeg, plyr, StableEstim, Rcpp (>= 1.0.9)
+LinkingTo: Rcpp, RcppArmadillo
 SystemRequirements: C++11, GDAL (>= 2.2.3), GEOS (>= 3.4.0), PROJ (>=
         4.9.3), sqlite3
-RoxygenNote: 7.1.2
-NeedsCompilation: no
-Packaged: 2022-04-09 18:42:59 UTC; d
+RoxygenNote: 7.2.1
+Suggests: testthat (>= 3.0.0)
+Config/testthat/edition: 3
+NeedsCompilation: yes
+Packaged: 2022-10-10 11:26:35 UTC; d
 Repository: CRAN
-Date/Publication: 2022-04-13 08:02:36 UTC
+Date/Publication: 2022-10-10 11:50:02 UTC

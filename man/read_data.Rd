@@ -24,15 +24,15 @@ each of red, green and blue colors. read_data_raster imports jpeg as a raster ob
 \code{\link[terra]{rast}}.
 }
 \description{
-All these functions are made to read jpeg images, the difference is in the objects they return
+All these functions are made to read jpeg images, the difference is in the class of objects they return
 }
 \section{Functions}{
 \itemize{
-\item \code{read_data_matrix}: returns three matrices
+\item \code{read_data_matrix()}: returns three matrices
 
-\item \code{read_data_raster}: returns a SpatRaster object
+\item \code{read_data_raster()}: returns a SpatRaster object
+
 }}
-
 \examples{
 
 dir <- system.file('extdata/Forest/', package = "deforestable")

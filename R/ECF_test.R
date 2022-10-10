@@ -3,11 +3,11 @@
 #### Covariance matrix ####
 stbl_param_covmtrx <- function(t_par, theta){
 
-  phi_2t <- ComplexCF(t=2*t_par, theta=theta, pm=0)
-  phi_m2t <- ComplexCF(t=-2*t_par, theta=theta, pm=0)
+  phi_2t <- ComplexCF(t=2*t_par, theta=theta, pm=1)
+  phi_m2t <- ComplexCF(t=-2*t_par, theta=theta, pm=1)
 
-  phi_t <- ComplexCF(t=t_par, theta=theta, pm=0)
-  phi_mt <- ComplexCF(t=-1*t_par, theta=theta, pm=0)
+  phi_t <- ComplexCF(t=t_par, theta=theta, pm=1)
+  phi_mt <- ComplexCF(t=-1*t_par, theta=theta, pm=1)
 
   el_11 <- Re(1/4 * (phi_2t + 2 + phi_m2t - (phi_t)^2 - 2*phi_t*phi_mt - phi_mt^2))
   el_22 <- Re(1/4 * ((phi_t)^2 - 2*phi_t*phi_mt + (phi_mt)^2) - 1/4*(phi_2t + phi_m2t - 2))
@@ -23,7 +23,7 @@ stbl_param_covmtrx <- function(t_par, theta){
 
 
 Z_0 <- function(t_par=4, theta){
-  phi_t <- ComplexCF(t=t_par, theta=theta, pm=0)
+  phi_t <- ComplexCF_cpp(t=t_par, theta=theta)
   c(Re(phi_t), Im(phi_t))
 }
 
@@ -33,6 +33,9 @@ Z_n <- function(t_par, X){
   c(Re(phi_t), Im(phi_t))
 }
 
+
+############# Abandoned for the moment ####################
+# Not used ??
 ECF_Stab_Distance <- function(X, t_par, theta){
 
   Z_n <- Z_n(t_par=t_par, X=X)
@@ -49,7 +52,7 @@ ECF_Stab_Distance <- function(X, t_par, theta){
 
 
 ####
-
+# Not used ??
 #
 # library(deforeStable)
 # data("geoimages")
@@ -73,6 +76,7 @@ Forest_Tester_stab_ECF <- function(params, dataset, t_par){
 
 
 #####
+# Not used ??
 Multiple_ECF_Tester <- function(data, params, t_par){
 
   test <- plyr::ldply(params, Forest_Tester_stab_ECF, dataset = data, t_par=t_par,

@@ -1,28 +1,27 @@
 
 #### New version of Param Model ####
 # Training of the non-parametric model
-# 
+#
 # @examples
 # library(deforestable)
-# 
+#
 # forestdir <- system.file('extdata/Forest/', package = "deforestable")
 # Nonforestdir <- system.file('extdata/Non-forest/', package = "deforestable")
-# 
-# ParModel <- ParamTrain(forestdir = forestdir, 
-#                        Nonforestdir = Nonforestdir,
-#                        t_par = 1)
-# 
+#
+# ParModel <- ParamTrain(forestdir = forestdir,
+#                        Nonforestdir = Nonforestdir)
+#
 # # Read the target image
 # tg_dir <- system.file('extdata/', package = "deforestable")
 # test_image <- read_data_raster('smpl_1.jpeg', dir = tg_dir)
-# 
+#
 # res <- Param_classifier(rastData=test_image, n_pts=10, progress='text',
 #                         Model=ParModel, parallel=FALSE)
-# res <- classify(data=test_image, Model=ParModel, 
+# res <- classify(data=test_image, Model=ParModel,
 #                 n_pts=10, parallel=FALSE, progress = 'text')
 # jpeg::writeJPEG(image=res, target='Partest_im.jpeg')
 # @export
-ParamTrain <- function(forestdir, Nonforestdir, t_par, Forest_list=NULL, Non_Forest_list=NULL){
+ParamTrain <- function(forestdir, Nonforestdir, Forest_list=NULL, Non_Forest_list=NULL){
 
   cl <- match.call()
 
@@ -66,46 +65,46 @@ ParamTrain <- function(forestdir, Nonforestdir, t_par, Forest_list=NULL, Non_For
   # only the green channel is included
 
   v_f_ns <- vector(mode='numeric')
+  t_pars <- vector(mode='numeric')
   z_n <- list()
   f_Z <- list()
   f_stab_params <- list()
   f_sigmas <- list()
+  inv_f_sigmas <- list()
 
   for (ind in 1:length(f_read_dataset)) {
 
     # data lengths
     v_f_ns <- c(v_f_ns, nrow(f_read_dataset[[ind]]))
 
-    # vectors of cfs
-    z_n <- Z_n(t_par=t_par,
-               X=f_read_dataset[[ind]][,2]) # t_par!!!
-    f_Z <- c(f_Z, list(z_n))
-
     # tables of stable parameters
     pars <- Koutparams(f_read_dataset[[ind]])
     f_stab_params <- c(f_stab_params, list(pars))
+    t_par <- 1/15/pars['green','gamma']
+    t_pars <- c(t_pars, t_par)
+
+    # vectors of cfs
+    z_n <- Z_n(t_par=t_par,
+               X=f_read_dataset[[ind]][,'green']) 
+    f_Z <- c(f_Z, list(z_n))
 
     # Cf covariance matrices
-    sigma <- stbl_param_covmtrx(t_par=t_par, theta=as.vector(pars[2,]))
+    sigma <- stbl_param_covmtrx_cpp(t_par=t_par, theta=base::as.vector(pars['green',], mode = 'numeric'))
+    inv_f_sigma<- solve(sigma)
     f_sigmas <- c(f_sigmas, list(sigma))
+    inv_f_sigmas <- c(inv_f_sigmas, list(inv_f_sigma))
   }
 
   #### Non-forest processing ####
   # only the green channel is included
 
   v_nf_ns <- vector(mode='numeric')
-  z_n <- list()
+  # z_n <- list()
   nf_Z <- list()
 
   for (ind in 1:length(nf_read_dataset)) {
-
     # data lengths
     v_nf_ns <- c(v_nf_ns, nrow(nf_read_dataset[[ind]]))
-
-    # vectors of cfs
-    z_n <- Z_n(t_par=t_par,
-               X=nf_read_dataset[[ind]][,2]) # t_par!!!
-    nf_Z <- c(nf_Z, list(z_n))
   }
 
 
@@ -113,13 +112,16 @@ ParamTrain <- function(forestdir, Nonforestdir, t_par, Forest_list=NULL, Non_For
 
 
   #### Forest distances ####
-
   ds_f <- vector(mode='numeric')
 
   for (i_f in 1:length(f_read_dataset)) {
     ds_ind <- vector(mode='numeric')
     for (i_F in 1:length(f_read_dataset)) {
-      res <- v_f_ns[i_f] %*% t(f_Z[[i_f]] - f_Z[[i_F]]) %*% solve(f_sigmas[[i_F]]) %*% (f_Z[[i_f]] - f_Z[[i_F]])
+
+      z_n <- Z_n(t_par=t_pars[i_F],
+                 X=f_read_dataset[[i_f]][,'green'])
+
+      res <- v_f_ns[i_f] %*% t(z_n - f_Z[[i_F]]) %*% inv_f_sigmas[[i_F]] %*% (z_n - f_Z[[i_F]])
       res <- as.numeric(res)
       ds_ind <- c(ds_ind, res)
     }
@@ -133,7 +135,11 @@ ParamTrain <- function(forestdir, Nonforestdir, t_par, Forest_list=NULL, Non_For
   for (i_nf in 1:length(nf_read_dataset)) {
     ds_ind <- vector(mode='numeric')
     for (i_F in 1:length(f_read_dataset)) {
-      res <- v_nf_ns[i_nf] %*% t(nf_Z[[i_nf]] - f_Z[[i_F]]) %*% solve(f_sigmas[[i_F]]) %*% (nf_Z[[i_nf]] - f_Z[[i_F]])
+
+      z_n <- Z_n(t_par=t_pars[i_F],
+                 X=nf_read_dataset[[i_nf]][,'green'])
+
+      res <- v_nf_ns[i_nf] %*% t(z_n - f_Z[[i_F]]) %*% inv_f_sigmas[[i_F]] %*% (z_n - f_Z[[i_F]])
       res <- as.numeric(res)
       ds_ind <- c(ds_ind, res)
     }
@@ -154,8 +160,9 @@ ParamTrain <- function(forestdir, Nonforestdir, t_par, Forest_list=NULL, Non_For
                  thres=ll[[1]],
                  f_stab_params=f_stab_params,
                  forest_sigmas=f_sigmas,
+                 inv_f_sigmas=inv_f_sigmas,
                  f_Z=f_Z,
-                 t_par=t_par
+                 t_pars=t_pars
                 ),
             class = c("ForestTrainParam", "ForestTrain"))
 }
@@ -167,8 +174,8 @@ Param_classifier <- function(rastData, n_pts, Model, parallel=FALSE, progress = 
 
   thres <- as.numeric(Model$thres)
   matdata <- list(
-                  as.matrix(rastData[[1]], wide=T), 
-                  as.matrix(rastData[[2]], wide=T), 
+                  as.matrix(rastData[[1]], wide=T),
+                  as.matrix(rastData[[2]], wide=T),
                   as.matrix(rastData[[3]], wide=T)
                  )
   Gst <- Group_stats(matdata=matdata, n_pts=n_pts, fun=MultipleTesterParam2, progress = progress,

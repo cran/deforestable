@@ -32,9 +32,9 @@ the same as in the original data. createFolds() splits the data into k folds for
 }
 \section{Functions}{
 \itemize{
-\item \code{createFolds}: Split data into folds
-}}
+\item \code{createFolds()}: Split data into folds
 
+}}
 \examples{
 
 library(deforestable)

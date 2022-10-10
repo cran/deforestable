@@ -1,6 +1,6 @@
 
 ####
-
+# Old R version
 T_sq_nonpar_precomp <- function(means_1, means_2, nrow1, nrow2, cov1, cov2) {
 
   diff <- as.vector(means_1 - means_2)
@@ -13,25 +13,25 @@ T_sq_nonpar_precomp <- function(means_1, means_2, nrow1, nrow2, cov1, cov2) {
 
 #### New version of Non-Param Model ####
 # Training of the non-parametric model
-# 
+#
 # @examples
 # library(deforestable)
-# 
+#
 # forestdir <- system.file('extdata/Forest/', package = "deforestable")
 # Nonforestdir <- system.file('extdata/Non-forest/', package = "deforestable")
-# 
-# NonParModel <- NonParamTrain(forestdir = forestdir, 
+#
+# NonParModel <- NonParamTrain(forestdir = forestdir,
 #                              Nonforestdir = Nonforestdir)
 # summary(NonParModel)
-# 
+#
 # # Read the target image
 # tg_dir <- system.file('extdata/', package = "deforestable")
 # test_image <- read_data_raster('smpl_1.jpeg', dir = tg_dir)
-# 
+#
 # res <- Nonparam_classifier(rastData=test_image, n_pts=10, Model=NonParModel, parallel=FALSE)
 # res <- classify(data=test_image, Model=NonParModel, n_pts=10, parallel=FALSE, progress = 'text')
 # jpeg::writeJPEG(image=res, target='NonPartest_im.jpeg')
-# 
+#
 # @export
 NonParamTrain <- function(forestdir, Nonforestdir, Forest_list=NULL, Non_Forest_list=NULL){
 
@@ -130,9 +130,9 @@ NonParamTrain <- function(forestdir, Nonforestdir, Forest_list=NULL, Non_Forest_
 
     ds_ind <- vector(mode='numeric')
     for (i_F in 1:length(f_read_dataset)) {
-      res <- T_sq_nonpar_precomp(means_1 = f_means[i_F,], means_2 = f_means[i_f,],
-                                 nrow1 = v_f_ns[i_F], nrow2 = v_f_ns[i_f],
-                                 cov1 = f_cov_list[[i_F]], cov2 = f_cov_list[[i_f]])
+      res <- T_sq_nonpar_precomp_cpp(means_1 = f_means[i_F,], means_2 = f_means[i_f,],
+                                     nrow1 = v_f_ns[i_F], nrow2 = v_f_ns[i_f],
+                                     cov1 = f_cov_list[[i_F]], cov2 = f_cov_list[[i_f]])
       ds_ind <- c(ds_ind, res)
     }
     ds_f <- c(ds_f, min(ds_ind[ds_ind!=0]))
@@ -147,9 +147,9 @@ NonParamTrain <- function(forestdir, Nonforestdir, Forest_list=NULL, Non_Forest_
 
     ds_ind <- vector(mode='numeric')
     for (i_F in 1:length(f_read_dataset)) {
-      res <- T_sq_nonpar_precomp(means_1 = f_means[i_F,], means_2 = nf_means[i_nf,],
-                                 nrow1 = v_f_ns[i_F], nrow2 = v_nf_ns[i_nf],
-                                 cov1 = f_cov_list[[i_F]], cov2 = nf_cov_list[[i_nf]])
+      res <- T_sq_nonpar_precomp_cpp(means_1 = f_means[i_F,], means_2 = nf_means[i_nf,],
+                                     nrow1 = v_f_ns[i_F], nrow2 = v_nf_ns[i_nf],
+                                     cov1 = f_cov_list[[i_F]], cov2 = nf_cov_list[[i_nf]])
       ds_ind <- c(ds_ind, res)
     }
     ds_nf <- c(ds_nf, min(ds_ind))
@@ -179,8 +179,8 @@ Nonparam_classifier <- function(rastData, n_pts, Model, parallel=FALSE, progress
 
   thres <- as.numeric(Model$thres)
   matdata <- list(
-                  as.matrix(rastData[[1]], wide=T), 
-                  as.matrix(rastData[[2]], wide=T), 
+                  as.matrix(rastData[[1]], wide=T),
+                  as.matrix(rastData[[2]], wide=T),
                   as.matrix(rastData[[3]], wide=T)
                  )
   Gst <- Group_stats(matdata=matdata, n_pts=n_pts, fun=MultipleTester2, progress = progress,

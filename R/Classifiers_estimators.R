@@ -32,17 +32,17 @@ Koutparams <- function(data){
   theta0b <- c(1.81, 0, 0.038, b_m)
 
   red <- KoutParametersEstim(x=data[,1], theta0 = NULL, spacing = "Kout",
-                             pm = 0, tol = 0.05, NbIter = 10, PrintTime = FALSE)$Estim$par
+                             pm = 1, tol = 0.05, NbIter = 10, PrintTime = FALSE)$Estim$par
 
   red[4] <- r_m
 
   green <-  KoutParametersEstim(x=data[,2], theta0 = NULL, spacing = "Kout",
-                                pm = 0, tol = 0.05, NbIter = 10, PrintTime = FALSE)$Estim$par
+                                pm = 1, tol = 0.05, NbIter = 10, PrintTime = FALSE)$Estim$par
 
   green[4] <- g_m
 
   blue <-  KoutParametersEstim(x=data[,3], theta0 = NULL, spacing = "Kout",
-                               pm = 0, tol = 0.05, NbIter = 10, PrintTime = FALSE)$Estim$par
+                               pm = 1, tol = 0.05, NbIter = 10, PrintTime = FALSE)$Estim$par
 
   blue[4] <- b_m
 
@@ -164,9 +164,9 @@ MultipleTester2 <- function(data, Model){
   Mah_dists <- vector(mode = 'numeric')
   for (ind in 1:N_forests) {
     Mah_dists <- c(Mah_dists,
-                   T_sq_nonpar_precomp(means_1 = means_1, means_2 = as.vector(Model$forest_means[ind,]),
-                                       nrow1 = nrow_1, nrow2 = Model$forest_ns[ind],
-                                       cov1 = cov_1, cov2 = Model$forest_covars[[ind]]))
+                   T_sq_nonpar_precomp_cpp(means_1 = means_1, means_2 = as.vector(Model$forest_means[ind,]),
+                                           nrow1 = nrow_1, nrow2 = Model$forest_ns[ind],
+                                           cov1 = cov_1, cov2 = Model$forest_covars[[ind]]))
   }
 
   min(Mah_dists)
@@ -177,19 +177,18 @@ MultipleTester2 <- function(data, Model){
 MultipleTesterParam2 <- function(data, Model){
 
   data <- data[,1:3]
-
   nrow_1 <- nrow(data)
-  Z_1 <- Z_n(t_par=Model$t_par, X=data[,2])
 
   ECF_dists <- vector(mode = 'numeric')
   N_forests <- length(Model$f_Z)
 
   for (ind in 1:N_forests) {
 
+    Z_1 <- Z_n(t_par=Model$t_pars[ind], X=data[,2])
     Z_2 <- Model$f_Z[[ind]]
-    mtrx <- Model$forest_sigmas[[ind]]
+    mtrx <- Model$inv_f_sigmas[[ind]]
     ECF_dists <- c(ECF_dists,
-                   nrow_1 * as.numeric(t(Z_1-Z_2) %*% solve(mtrx) %*% (Z_1-Z_2)))
+                   nrow_1 * as.numeric(t(Z_1-Z_2) %*% mtrx %*% (Z_1-Z_2)))
   }
 
   min(ECF_dists)

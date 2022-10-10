@@ -42,11 +42,11 @@ the original image.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{ForestTrainParam}: Method for the class ForestTrainParam
+\item \code{classify(ForestTrainParam)}: Method for the class ForestTrainParam
 
-\item \code{ForestTrainNonParam}: Method for the class ForestTrainNonParam
+\item \code{classify(ForestTrainNonParam)}: Method for the class ForestTrainNonParam
+
 }}
-
 \examples{
 library(deforestable)
 n_pts <- 20

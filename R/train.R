@@ -111,7 +111,7 @@ train <- function(n_pts, model=c('fr_Non-Param', 'fr_Param'), Forestdir, Nonfore
 
         if(train_method=='train') {
             res <- ParamTrain(forestdir=Forestdir, Nonforestdir=Nonforestdir,
-                              t_par=1, Forest_list=NULL, Non_Forest_list=NULL)
+                              Forest_list=NULL, Non_Forest_list=NULL)
 
         } else if(train_method=='cv') {
 
@@ -120,7 +120,7 @@ train <- function(n_pts, model=c('fr_Non-Param', 'fr_Param'), Forestdir, Nonfore
 
             res <- ParamCV(k_folds=k_folds, n_pts=n_pts,
                            forestdir=Forestdir, Nonforestdir=Nonforestdir,
-                           t_par=1, parallel=parallel)
+                           parallel=parallel)
         }
     } else {stop('The specified model is not supported')}
 
