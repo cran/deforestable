@@ -1,4 +1,4 @@
-572166a1d6344e7e9219e47be7aec3c5 *DESCRIPTION
+ada120255e063e93239028b5d79cf4e5 *DESCRIPTION
 248b16c592f70cb5e2109ee466189d40 *NAMESPACE
 be727baed09ccda2cea83bf5e9bc2b0c *R/Classifiers_estimators.R
 fab25da561c70757d4e2fb3b5152f5ca *R/CompAcc.R
@@ -225,7 +225,7 @@ d3087eea73ab30208ff31725280ba00f *man/createDataPartition.Rd
 61059660eb073d93e00e8ee054237071 *src/Makevars.win
 83541bf724368549f477430bc00b2619 *src/RcppExports.cpp
 4720cd3ef03193845de45dd1a3604ebe *src/nonparam_adds.cpp
-17c2dffc079e0c923caabe7fd8af14d3 *src/param_adds.cpp
+bbc47440d5127a55e26fbf1a8101c809 *src/param_adds.cpp
 97984ed3e9472bc56e9236ff24fa6ab7 *tests/testthat.R
 1167e21eaefe5ad862f0ac5b090dccb3 *tests/testthat/test-nonparam.R
 162c03384a4652502aa823551613374e *tests/testthat/test-param.R

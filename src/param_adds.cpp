@@ -67,18 +67,17 @@ std::complex<double> ComplexCF_cpp(double t, Rcpp::NumericVector theta)
 // [[Rcpp::export]]
 arma::mat stbl_param_covmtrx_cpp(double t_par, Rcpp::NumericVector theta){
 
-  double t{0};
   std::complex<double> phi_2t;
   std::complex<double> phi_m2t;
 
-  phi_2t = ComplexCF_cpp(t=2*t_par, theta=theta);
-  phi_m2t = ComplexCF_cpp(t=-2*t_par, theta=theta);
+  phi_2t = ComplexCF_cpp(2*t_par, theta);
+  phi_m2t = ComplexCF_cpp(-2*t_par, theta);
 
   std::complex<double> phi_t;
   std::complex<double> phi_mt;
 
-  phi_t = ComplexCF_cpp(t=t_par, theta=theta);
-  phi_mt = ComplexCF_cpp(t=-1*t_par, theta=theta);
+  phi_t = ComplexCF_cpp(t_par, theta);
+  phi_mt = ComplexCF_cpp(-1*t_par, theta);
 
   double el_11{0};
   double el_22{0};
