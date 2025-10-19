@@ -1,4 +1,4 @@
-ada120255e063e93239028b5d79cf4e5 *DESCRIPTION
+8a46a8caec9a10570e33db0c4152a998 *DESCRIPTION
 248b16c592f70cb5e2109ee466189d40 *NAMESPACE
 be727baed09ccda2cea83bf5e9bc2b0c *R/Classifiers_estimators.R
 fab25da561c70757d4e2fb3b5152f5ca *R/CompAcc.R
@@ -13,6 +13,7 @@ dbeb258b9ba27a7fd9a3b66d2743fc2a *R/ECF_test.R
 e4daf4d24b9cbc01ce7160584ac3b46a *R/nonparam.R
 135477115784f3753b9b113c502908b3 *R/param.R
 fe9501529251e183a73a4fed3c98ce8e *R/train.R
+81c023280bc06bc5421c61ca1050d34c *inst/CITATION
 f0db0d47eef89c09e8caf5e4ad595e92 *inst/extdata/Forest/_10_11_.jpeg
 da133e31771c9d7650a7220c9ef90a01 *inst/extdata/Forest/_10_1_.jpeg
 5e119ee8e13d0c0b240d06871de34659 *inst/extdata/Forest/_10_46_.jpeg
@@ -221,8 +222,8 @@ b3aa779fbf2c735d1d19ef67c6371607 *inst/extdata/Non-forest/_99_92_.jpeg
 d3087eea73ab30208ff31725280ba00f *man/createDataPartition.Rd
 47ef4baef03a3aba73e32a7db019e415 *man/read_data.Rd
 539cfe7881ff527f639d979efaf716ec *man/train.Rd
-61059660eb073d93e00e8ee054237071 *src/Makevars
-61059660eb073d93e00e8ee054237071 *src/Makevars.win
+40f139228735d306fdb28f5f16115521 *src/Makevars
+40f139228735d306fdb28f5f16115521 *src/Makevars.win
 83541bf724368549f477430bc00b2619 *src/RcppExports.cpp
 4720cd3ef03193845de45dd1a3604ebe *src/nonparam_adds.cpp
 bbc47440d5127a55e26fbf1a8101c809 *src/param_adds.cpp
